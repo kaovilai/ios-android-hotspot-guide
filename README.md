@@ -125,7 +125,7 @@ Apple devices can activate a nearby family hotspot without opening Settings:
 2. Keep Wi-Fi and Bluetooth enabled on both devices.
 3. Set the client's **Auto-Join Hotspot** option to **Automatic** or **Ask to Join**.
 
-This is the only supported way for one device to wake another device's iPhone hotspot without a user action on the provider.
+This is the only native proximity-based way for one device to wake another device's iPhone hotspot. A trusted message or email automation can also turn on the provider's hotspot after it arrives; see the fallback section below.
 
 ### Siri
 
@@ -139,16 +139,16 @@ On the hotspot provider:
 
 Create a matching **Hotspot Off** shortcut with **Turn Off**.
 
-### Leave-home automation
+### Leaving-home automation
 
 On the hotspot provider:
 
 1. Open Shortcuts > Automation.
-2. Create a Wi-Fi automation.
-3. Trigger when the device disconnects from a trusted home network.
+2. Create a Leave automation.
+3. Choose the home location.
 4. Run **Set Personal Hotspot > Turn On**.
 
-Add a reverse automation to turn the hotspot off when the provider reconnects to the home network.
+Add a reverse Arrive automation for the home location, or a Wi-Fi automation that runs when the provider joins the trusted home network, to turn the hotspot off.
 
 ### Arrival automation
 
@@ -160,13 +160,15 @@ Use a location trigger for a place where a hotspot is regularly needed:
 
 ### CarPlay or car Bluetooth
 
-For vehicles:
+For CarPlay:
 
-1. Shortcuts > Automation > CarPlay or Bluetooth.
+1. Shortcuts > Automation > CarPlay.
 2. Trigger when the provider connects to the car.
 3. Run **Set Personal Hotspot > Turn On**.
 
-Add a disconnect automation to turn it off.
+Add a CarPlay disconnect automation to turn it off.
+
+For a generic car Bluetooth connection, use the Bluetooth connect trigger to turn the hotspot on. Shortcuts' Bluetooth trigger does not provide a disconnect option, so turn the hotspot off with a separate Arrive, time-of-day, or low-battery automation.
 
 ### Focus
 
@@ -260,6 +262,7 @@ Use a separate code to turn the hotspot off. Do not use a common word such as `h
 - An Apple device cannot use vendor-specific trusted Android hotspot features unless the vendor supports it.
 - A client cannot wake a hotspot simply by scanning for it.
 - iOS does not expose the point when another device tries to join a hotspot before authentication.
+- Shortcuts' Wi-Fi and Bluetooth setting triggers run when a network or device connects, not when it disconnects.
 - Apple's contact-based Wi-Fi password sharing is for ordinary Wi-Fi networks, not Personal Hotspot.
 
 ## Safety and cost controls
