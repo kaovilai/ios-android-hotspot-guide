@@ -15,7 +15,7 @@ Practical, privacy-conscious patterns for joining, sharing, and triggering perso
 1. **Apple Instant Hotspot only works inside Apple's ecosystem.** It requires the same Apple Account or the same Family Sharing group. An Android device cannot use it.
 2. **Android and iOS can join each other as ordinary Wi-Fi clients.** That path always needs the hotspot password unless the platform provides its own trusted-device shortcut.
 3. **A hotspot must be on before a client can join it.** Cross-platform clients cannot wake an iPhone or Android hotspot by merely scanning for the network.
-4. **The hotspot provider controls the automation.** If you want a hotspot to turn on automatically, put the automation on the device providing the hotspot.
+4. **Explicit automations belong on the provider.** If you use Shortcuts or a vendor automation app, put the automation on the device providing the hotspot. Apple Instant Hotspot is the client-side exception.
 
 ## Quick matrix
 
