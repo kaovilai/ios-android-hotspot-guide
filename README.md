@@ -7,6 +7,7 @@ Practical, privacy-conscious patterns for joining, sharing, and triggering perso
 - Joining an iPhone or iPad hotspot from another Apple device.
 - Joining an iPhone or iPad hotspot from an Android device.
 - Joining an Android hotspot from an iPhone or iPad.
+- Turning on an Android hotspot from a Mac, iPhone, or iPad with a local bridge.
 - Turning a hotspot on automatically with Shortcuts, Android automation apps, or local hardware triggers.
 - Avoiding common cross-platform limits and accidental data use.
 
@@ -26,6 +27,7 @@ Practical, privacy-conscious patterns for joining, sharing, and triggering perso
 | Android | iPhone or iPad | No | Join as a normal Wi-Fi network |
 | iPhone or iPad | Android | No | Join as a normal Wi-Fi network |
 | Android | Android | Usually no | Normal Wi-Fi; some vendors add trusted-device shortcuts |
+| Mac, iPhone, or iPad | Android | No | Custom BLE, webhook, or home-automation bridge |
 
 ## Prerequisites
 
@@ -114,6 +116,62 @@ If the Apple device cannot see the hotspot:
 5. Let the client save the network.
 
 Some Android vendors offer trusted-device or same-account hotspot features. Those features normally work only between devices from the same vendor or signed in to the same account.
+
+## Triggering an Android hotspot from Mac or iOS
+
+Apple devices cannot use Apple Instant Hotspot to wake an Android hotspot. A Mac, iPhone, or iPad can still trigger one if you add a bridge on the Android side. The bridge is a separate protocol, not an Apple Continuity feature.
+
+### Mac-to-Android BLE bridge
+
+This is the closest practical equivalent to Instant Hotspot:
+
+1. Install an Android app that exposes a Bluetooth LE GATT hotspot controller.
+2. Grant it access through Shizuku or another privileged helper.
+3. Pair the Mac and Android device once.
+4. Use a Mac menu-bar app, script, or shortcut to send the hotspot-on command.
+5. Let the Mac client join the Android hotspot with the saved password.
+
+Open-source examples include [Untether](https://github.com/ImOstrovskiy/untether) and [EasySpot](https://github.com/EasySpotApp/EasySpot). They use Android 12+, BLE advertising, and Shizuku to toggle tethering without root. Untether also signs commands over the BLE link and can join the hotspot from the Mac side.
+
+Trade-offs:
+
+- It works without SMS, cellular data, or a shared Wi-Fi network.
+- It needs a persistent foreground service or background service on Android.
+- It may need battery-optimization exemptions.
+- It is device- and Android-version dependent.
+- It does not make Android participate in Apple Family Sharing.
+
+### iOS-to-Android local bridge
+
+An iPhone or iPad can trigger an Android hotspot through a local bridge if both devices are reachable:
+
+1. Run an automation server or webhook receiver on the Android device.
+2. Expose an authenticated local HTTP endpoint or a Home Assistant entity.
+3. Create an iOS shortcut that calls that endpoint when you need the hotspot.
+4. Have the Android side toggle the hotspot with Tasker, MacroDroid, or a vendor automation app.
+
+Example pattern:
+
+```text
+iOS Shortcut
+  -> HTTPS request to Home Assistant or local webhook
+  -> Android automation app
+  -> Android hotspot toggles on
+```
+
+Use this only on a trusted network, or through a VPN or reverse proxy with authentication. Do not expose an unauthenticated hotspot-toggle endpoint to the public internet.
+
+An iPhone or iPad can also run a custom BLE GATT client, but Apple's built-in Shortcuts app does not provide raw BLE GATT control. That path requires a custom iOS app or a bridge device.
+
+### Push or notification bridge
+
+When a local network bridge is not available:
+
+1. Send a push notification, webhook, or message from the Mac or iOS device.
+2. Trigger a matching Android automation from that notification.
+3. Turn the hotspot on only for trusted senders and unique codes.
+
+This is more flexible than a purely local bridge, but it depends on network delivery and may introduce notification delays.
 
 ## Triggering an iPhone hotspot
 
